@@ -1,0 +1,1253 @@
+
+
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit">
+    <base href="https://jwxt.ecjtu.edu.cn/">
+    <title>华东交通大学教务综合管理信息系统</title>
+	<link rel="icon" type="image/vnd.microsoft.icon" href="images/ecjtu_logo.ico" />   
+	<meta http-equiv="keywords" content="华东交通大学,教务管理系统,学生成绩,胡振立,刘锦清,王海宝,朱济世">
+	<meta http-equiv="description" content="华东交通大学教务管理系统-学生成绩">		
+	<script src="scripts/jquery-1.11.1.min.js"></script> 
+    <script src="scripts/edumis_function.js"></script> 
+	<link rel="stylesheet" type="text/css" href="styles/edumis.css">
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/scorequery.css" />
+</head>
+<body>
+<!-- header begin-->
+
+<div class="header">
+	<div id="head-center">
+		<a href="" title="首页"><div id="logo-edumis"></div></a>
+	    <div id="info">
+			<ul class="nav-item">
+				<li class="home-page">
+					<a href="/index.action?item=0000">主页</a>
+				</li>
+				<li class="scheme">
+					<a href="/infoQuery/myEduScheme.jsp?item=0105">我的培养方案</a>
+				</li>
+				<li class="course">
+					<a href="/Schedule/Schedule_getUserSchedume.action?item=0207">个人课表</a>
+				</li>
+				<li class="score">
+					<a href="/scoreQuery/stuScoreQue_getStuScore.action?item=0401">我的成绩</a>
+				</li>
+				<li class="exam">
+					<a href="/examArrange/stuExam_findTerm.action?item=0205">考试安排</a>
+				</li>
+				<li class="exam">
+					<a href="/infoQuery/ElecCert_myElecCert.action?item=0107">我的电子证明</a>
+				</li>
+				<li class="info">
+					<a href="/stuMag/UserInfoAction_findUserInfo.action?item=0000">
+						刘鑫林<span class="arrow-index arrow-down"></span>
+					</a>
+					<dl class="set-info-ul">
+						<dd><a href="/stuMag/UserInfoAction_findUserInfo.action#basic">基本信息</a></dd>
+						<dd><a href="/stuMag/UserInfoAction_findUserInfo.action#contact">联系信息</a></dd>
+						<dd><a href="/stuMag/UserInfoAction_findUserInfo.action#password">密码修改</a></dd>
+					</dl>
+				</li>
+				<li>
+					<div class="log-out">
+						<img src="images/iconfont-tuichu.png">
+						<span>退出</span>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+/**
+ * 退出
+ */
+$(".log-out").hover(
+	function(){
+		$(this).css("background","#ffaa45");
+		$(this).find("img").stop().animate({'left':'25px'},200);
+		$(this).find("span").stop().fadeOut("fast");
+	},
+	function(){
+		$(this).css("background","#ff8b00");
+		$(this).find("img").stop().animate({'left':'5px'},200);
+		$(this).find("span").stop().fadeIn("fast");
+	}
+).click(function(){
+	window.location.href="/stuMag/LogOut_loginOut.action";
+});
+console.log("欢迎加入我们教务处项目组！！\n想学前端和后台(项目开发语言：java)的小伙伴\n可以加入我们");
+console.log("有兴趣将你的信息发至此邮箱 %c（21835651@qq.com）","color:red");
+</script>
+<!--  end header -->
+<!-- container begin-->
+<div id="content">
+	<!-- 内容展示区 -->
+	<div id="main-content">
+		<div id="content-show">
+			<!-- 面包屑导航 -->
+			<div class="breadcrumb">
+			    <ol>
+			        <li><a href="#">主页&nbsp;&nbsp;/</a></li>
+			        <li><a href="#">成绩查询&nbsp;&nbsp;/</a></li>
+			        <li class="active">学生成绩</li>
+			    </ol>
+			    <span><script>timmer();</script></span>
+			</div>
+			<div id="data-center">
+				
+				
+					<div class="query-type">
+						<ul>
+							<li class="activeli base-1"><em></em><a href="javascript:;">主修成绩</a></li>
+							
+						</ul>
+					</div>
+					
+						
+							
+								<div class="base base-user">
+									<div class="score-count">
+										<table class="table_border personal-socre-tab">
+											
+												
+													<tr>
+													<th rowspan="3">班级</th>
+													<th rowspan="3" class="s_tab_name">姓名</th>
+													<!-- <th rowspan="3">学号</th> -->
+													<th rowspan="3">学籍状态</th>
+													<th colspan="2" rowspan="2">学业预警情况</th>
+													<th colspan="2" rowspan="2">学位平均学分绩点要求</th>
+													<th colspan="21">毕业要求</th>
+												    </tr>
+												    <tr>	
+												    <!-- <th colspan="3">总学分要求</th>	 -->										
+													<th colspan="3">公共任选课学分</th>
+													<th colspan="3">经管法学类公共任选课学分</th>											
+													<th colspan="3">人文艺术类公共任选课学分</th>
+													<th colspan="3">科学技术类公共任选课学分</th>											
+													<th colspan="3">身心健康类公共任选课学分</th>
+													<th colspan="3">学科任选课学分</th>
+													<th colspan="3">专业任选课学分</th>
+													</tr>
+												
+												
+											
+											<tr>
+												
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>应获得</th>
+													<th>已获得</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>											
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+													<th>应完成</th>
+													<th>已完成</th>
+													<th>欠学分</th>
+												
+																							
+											</tr>
+											<tr>
+												<td>软件2022-3</td>
+												<td class="s_tab_name">刘鑫林</td>
+												<!-- <td>2022211003000111</td> -->
+												<td>正常|专业调整|有学籍</td>
+												
+													<td>60</td>
+													<td>76</td>	
+																						
+												<td>2.2</td>
+												<td>3.46</td>
+												<!-- <td>164</td>
+												<td>80</td>
+												<td>84</td> -->
+												
+													<td>6</td>
+													<td>4</td>
+													<td>2</td>
+													<td>2</td>
+													<td>0</td>
+													<td>2</td>
+													<td>2</td>
+													<td>2</td>
+													<td>0</td>
+													<td>0</td>
+													<td>2</td>
+													<td>0</td>
+													<td>2</td>
+													<td>0</td>
+													<td>2</td>
+													<td>4</td>
+													<td>4</td>
+													<td>0</td>
+													<td>16</td>
+													<td>0</td>
+													<td>16</td>
+												
+												
+											</tr>
+										</table>
+									</div>
+									<div style="margin:auto;">
+										<a class="query-detailScore" id="queryDetailScore1" href="/scoreQuery/stuScoreQue_getStuDetailScore.action?studyType=1">成绩详情查询</a>
+										<a type="hide" class="query-detailScore" id="queryDetailScore2" href="/scoreQuery/stuScoreQue_getStuDetailScore.action?studyType=2">成绩详情查询</a>
+									</div>
+									<div class="score-detail" style="margin-top: 70px;">
+										<div class="s_term">
+											<span>学期<input class="s_defaultTerm" type="hidden" value="2023_1 " /></span>
+											<ul>
+												
+													
+														
+															<li data-term="2023_1"><em></em><a href="javascript:;">2023.1</a></li>
+														
+															<li data-term="2022_2"><em></em><a href="javascript:;">2022.2</a></li>
+														
+															<li data-term="2022_1"><em></em><a href="javascript:;">2022.1</a></li>
+														
+													
+													
+												
+											</ul>
+										</div>
+										<div style="clear:both;"></div>
+										<div class="s_termScore">
+											<ul class="s_t_title">
+												<li class="s_t_term">学期</li>
+												<li class="s_t_cour">课程名称</li>
+												<li class="s_t_courRequire">课程要求</li>
+												<li>考核方式</li>
+												<li>课程学分</li>
+												<li>考试成绩</li>
+												<li>重考成绩</li>
+												<li>重修成绩</li>
+											</ul>
+											
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1500100250】网页动画制作</li>
+																		<li class="s_t_courRequire">公共任选课【科学技术类】</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>优秀</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1500109880】中韩文化赏析</li>
+																		<li class="s_t_courRequire">公共任选课【人文艺术类】</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>优秀</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1505100033】体育Ⅲ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>97</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100080】概率论与数理统计</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>76</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100312】大学物理Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>77</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100322】大学物理实验Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>90</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1509101483】大学英语Ⅲ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>2</li>
+																		<li>77</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100153】形势与政策Ⅲ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>0.5</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521100060】Java程序设计(A)</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>3</li>
+																		<li>95</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101280】软件技术基础</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1.5</li>
+																		<li>88</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101290】软件工程（A）</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>85</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101460】Web 应用设计基础</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>90</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101500】数据库系统原理</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>89</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2023_1 term_score">
+																		<li class="s_t_term">2023.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521190082】综合课程设计Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>中等</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+											
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1505100032】体育Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>94</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100012】高等数学(A)Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>4</li>
+																		<li>92</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100311】大学物理Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>77</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100321】大学物理实验Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>82</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1509101482】大学英语Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>2</li>
+																		<li>69</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1513103980】交通概论</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>78</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100130】中国近现代史纲要</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>3</li>
+																		<li>84</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100152】形势与政策Ⅱ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>0.5</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100160】马克思主义基本原理</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>3</li>
+																		<li>75</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101430】数据结构</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3.5</li>
+																		<li>79</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101450】离散数学</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>87</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101480】Python程序设计</li>
+																		<li class="s_t_courRequire">学科任选课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>93</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521102450】计算思维与程序设计概论</li>
+																		<li class="s_t_courRequire">学科任选课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>中等</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_2 term_score">
+																		<li class="s_t_term">2022.2</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521190081】综合课程设计Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+											
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1500100101】职业生涯与发展规划</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>0.5</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1500190090】专业导论</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>0</li>
+																		<li>合格</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1500190200】军事技能</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>合格</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1505100031】体育Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>1</li>
+																		<li>85</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1505101460】国家安全与军事理论</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>2</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1508100011】高等数学(A)Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>6</li>
+																		<li>82</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+														
+														
+															<ul style="background:#989898" class="2022_1 term_score">
+																<li class="s_t_term">2022.1</li>
+																<li align="left" class="s_t_cour s_t_cCon">【1508100201】土建工程制图Ⅰ</li>
+																<li>必修课</li>
+																<li>考试</li>
+																<li>3</li>
+																<li>83</li>
+																<li></li>
+																<li></li>
+															</ul>
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1509100011】大学英语Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>3</li>
+																		<li>84</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100151】形势与政策Ⅰ</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>0.5</li>
+																		<li>良好</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1514100170】思想道德与法治</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考查</li>
+																		<li>3</li>
+																		<li>87</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+													
+																													
+															
+																
+																	<ul class="2022_1 term_score">
+																		<li class="s_t_term">2022.1</li>
+																		<li align="left" class="s_t_cour s_t_cCon">【1521101220】软件开发基础</li>
+																		<li class="s_t_courRequire">必修课</li>
+																		<li>考试</li>
+																		<li>4</li>
+																		<li>94</li>
+																		<li></li>
+																		<li></li>
+																	</ul>
+																
+																
+																														
+														
+														
+													
+												
+											
+										</div>
+										<div style="clear:both;"></div>
+									</div>
+								</div>
+							
+						
+						
+					
+				
+				  
+				
+				<div style="background-color: #989898;width: 560px;border: 1px solid red;padding: 8px;">底色为灰色的课程为：非培养方案要求课程，不作要求，不在成绩单上体现，不计入绩点。</div>
+			</div>
+		</div>
+	</div>
+	<!--  sidebar begin -->
+	
+
+	<!-- sideBar begin -->
+	<div id="sidebar">
+		<ul class="sidebar-menu">
+			<li class="cal-item">
+				<h3>信息查询</h3>
+				<a href="/infoQuery/XKStu_findTerm.action">选课小班序号</a>
+				<a href="/infoQuery/class_findClassList.action">班级名单</a>
+				<a href="/eduScheme/eduScheme_iniScheme.action">专业培养方案</a>
+				<a href="/infoQuery/class_toTaskTeacher.action">教师任务书</a>
+				<a href="/infoQuery/myEduScheme.jsp">我的培养方案</a>
+				<a href="/infoQuery/class_toTaskClass.action">班级任务书</a>
+				<a href="/infoQuery/ElecCert_myElecCert.action">我的电子证明</a>
+				<a href="/infoQuery/class_findStudentWorkbooks.action">学生手册</a>
+				
+			</li>
+			<li class="cal-item">
+				<h3>课表/考试</h3>
+				<a href="/Schedule/Schedule_iniSchedule.action">班级课表</a>
+				<a href="/Schedule/Schedule_initeacherSchedule.action">教师课表</a>
+				<a href="/Schedule/KSchedule_findKongClass.action">空教室</a>
+				<a href="/Schedule/ClassRoom_iniClassRoom.action">教室信息</a>
+				<a href="/Schedule/Schedule_getUserSchedume.action">我的课表</a>
+				<a href="/examArrange/stuExam_findTerm.action">考试安排</a>
+				<a href="/examArrange/stuBKExam_stuBKExam.action">补考安排</a>				
+				<a href="/Schedule/Weekcalendar_getStudentWeekcalendar.action">我的周历</a>
+				<a class="privilege" href="/Schedule/StuDealApply_StuDealApply.action">请假<!-- /休学 -->申请 </a>
+				<!-- <a href="/Schedule/ClassRoomApply_findClassRoomApplyinfos.action">教室申请</a> -->
+
+			</li>
+			<li class="cal-item">
+				<h3>考试报名</h3>
+				<!--<a href="/examEnroll/showExam_toExamEnroll.action?projectGroup=cet46">英语四六级</a>
+				<a href="/examEnroll/showExam_toExamEnroll.action?projectGroup=computer">计算机等级</a>-->
+				<a href="/examEnroll/showExam_toExamEnroll.action?projectGroup=zzy">转专业</a>
+				<a href="/examEnroll/showExam_toExamEnroll.action?projectGroup=sxw">辅修报名</a>
+				<a href="/examEnroll/showExam_toExamEnroll.action?projectGroup=other">其他</a>
+			</li>
+
+			<li class="cal-item">
+				<h3>成绩查询</h3>
+				<a href="/scoreQuery/stuScoreQue_getStuScore.action">我的成绩</a>
+				<!--<a href="/scoreQuery/CETScore_showCETScore.action">英语四六级</a>-->
+				
+				<a href="/scoreQuery/secondCreQue_findSecondCredit.action">素质拓展学分</a>
+				<a href="/scoreQuery/ExamSusApply_findExamSusApplyinfos.action">缓考申请</a>
+				<a href="/scoreQuery/StuStudyExtension_findStuStudyExtensionApplyinfos.action">延长学习年限申请</a>
+			</li>
+
+			<li class="cal-item">
+				<h3>教学评价</h3>
+				<a href="/assess/stuAssess_getPJCourseInfo.action">学生评教</a>		
+				<!--<a class="privilege" href="/assess/teachmessage_PJTeachMessageStu.action">教学信息反馈</a> 2024-03-05隐藏 -->	
+			</li>
+			<li class="cal-item">
+				<h3>实践教学</h3>
+				<a href="/Experiment/StudentExperiment_getExperiment.action">实验安排</a>
+				<!-- <a href="javascript:;">实习实训安排</a>  -->
+
+			</li>
+			<li class="cal-item">
+				<h3>毕业设计/论文</h3>
+				<a href="/graduation/graduStu_getGdtProjectStudents.action?eduType=1">毕设选题</a>
+				<!-- <a href="/graduation/graduStu_getGdtProjectStudents.action?eduType=2">辅修毕设选题</a> -->				
+			</li>
+			<li class="cal-item">
+				<h3>辅修/双学位</h3>
+				<a href="/doubleDegree/fxclass_findClassList.action">班级名单</a>
+				<a href="/doubleDegree/fxclassTask_toTaskClass.action">班级任务书</a>
+				<a href="/doubleDegree/fxSchedule_iniSchedule.action">班级课表</a>
+			</li>
+		</ul>
+	</div>
+	
+		<script type="text/javascript" src="scripts/sidebar.js"></script>
+		<script>
+			var item = 4;
+			var index = 1;
+			if ((item != 0) && (index != 0))
+				showIndex(item, index);
+		</script>
+		<!-- end sideBar--> 
+	<!-- end sidebar -->
+</div>
+<!-- end container-->
+<!-- footer begin -->
+
+<div id="footer">
+    <div class="center">
+        <ul class="friendLink">
+            <li>友情链接：</li>
+            <li class="rightLine"><a href="http://xkxt.ecjtu.edu.cn" target="_blank">学生选课系统</a></li>
+            <li class="rightLine"><a href="http://jwc1.ecjtu.edu.cn" target="_blank">教务处主页</a></li>
+            <li><a href="http://www.ecjtu.jx.cn" target="_blank">交大主页</a></li>
+        </ul>
+        <p>华东交通大学教务处版权所有 Copyright © <span id="year"></span> . All Rights Reserved<br />
+            地址:江西省南昌市经济技术开发区双港东大街808号</p>
+    </div>
+</div>
+<script>
+var date = new Date();
+date = date.getFullYear();
+window.onload=function(){
+	var year = document.getElementById("year");
+	year.innerHTML = date;
+}
+
+</script>
+
+<!-- end footer -->
+</body>
+<script type="text/javascript">
+var flag=0;
+/*默认显示主修成绩*/
+$(".base").hide();
+$(".base").eq(0).fadeIn();
+$("#queryDetailScore2").hide(); 
+$("#queryDetailScore1").show(); 
+
+$(".query-type a").click(function(){
+	$(".query-type li").each(function(){
+		if($(this).hasClass("activeli")){
+			$(this).removeClass("activeli");
+		}
+	});
+	$(this).parent("li").addClass("activeli");
+	var clssString=$(this).parent("li").attr("class").toString();
+	
+	if((clssString.indexOf("base-1"))>=0){
+		$(".base").hide();
+		$(".base").eq(0).fadeIn();
+		flag=0;
+		$("#queryDetailScore2").hide(); 
+		$("#queryDetailScore1").show(); 
+	}else if((clssString.indexOf("base-2"))>=0){
+		$(".base").hide();
+		$(".base").eq(1).fadeIn();
+		flag=1;
+		//$("#base-class").eq(1).fadeIn();
+		$("#queryDetailScore1").hide(); 
+		$("#queryDetailScore2").show(); 
+	}else{}
+	
+});
+
+/*默认当前学期选中*/
+var $liSel = $(".s_term");
+$liSel.each(function(i){
+	$(this).find("ul li").eq(0).addClass("s-t-sel");
+});
+
+/*默认当前学期的成绩选中*/
+$(".s_termScore").each(function(i){
+	$(this).find(".term_score").hide();
+	var defaultTerm = $(".s_defaultTerm").eq(i).val();
+	$(this).find("."+defaultTerm).show();
+});
+
+
+/*查看学期成绩*/
+$(".s_term").find("ul li").on("click",function(){
+	var _term = $(this).attr("data-term");  
+	$(this).addClass("s-t-sel").siblings().removeClass("s-t-sel");
+	$(".s_termScore").eq(flag).find(".term_score").hide();
+	$(".s_termScore").eq(flag).find("."+_term).show();
+
+});
+</script>
+</html>

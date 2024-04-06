@@ -1,0 +1,4 @@
+pyOpenSSL      ==24.1.0
+urllib3        ==1.26.18
+requests       ==2.31.0
+beautifulsoup4 ==4.12.3
