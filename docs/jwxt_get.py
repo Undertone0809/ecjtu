@@ -66,6 +66,7 @@ grade_html = session.get(get_grade)
 
 
 def get_grade_count(grade_html:requests.Response) -> dict:
+    """获取成绩统计信息,学分情况"""
     soup = BeautifulSoup(grade_html.text, 'html.parser')
     data_row = soup.find_all("tr")[3]
     data = [td.text for td in data_row.find_all("td")]
@@ -79,10 +80,11 @@ print(get_grade_count(grade_html))
 
 
 def get_grade_from_semester(semester:str,grade_html:requests.Response) -> list:
+    """获取某学期的课程成绩信息"""
     tsemester = semester.replace(".","_")
     grade_from_semester_list = []
     soup = BeautifulSoup(grade_html.text, 'html.parser')
-
+    
     pattern = re.compile(r'\b{}\b'.format(tsemester))
     ul_tags = soup.find_all("ul",class_=pattern)
     for ul_tag in ul_tags:
