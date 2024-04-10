@@ -38,7 +38,7 @@ classifiers = [  #! Update me
 python = ">=3.9,<4.0"
 
 typer = {extras = ["all"], version = "^0.4.0"}
-rich = "^10.14.0"
+rich = "^13.7.1"
 urllib3 = "1.26.18"
 pyopenssl = "24.1.0"
 requests = "2.31.0"
