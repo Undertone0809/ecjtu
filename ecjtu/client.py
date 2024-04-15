@@ -5,9 +5,8 @@ import httpx
 import requests
 from bs4 import BeautifulSoup
 from httpx import URL, Timeout
-from loguru import logger
 
-from ecjtu import crud, models
+from ecjtu import crud
 from ecjtu.constants import (
     CAS_ECJTU_DOMAIN,
     ECJTU2JWXT_URL,
@@ -15,12 +14,13 @@ from ecjtu.constants import (
     JWXT_LOGIN_URL,
     PWD_ENC_URL,
 )
+from ecjtu.utils.logger import logger
 
 _HttpxClientT = TypeVar("_HttpxClientT", bound=Union[httpx.Client, httpx.AsyncClient])
 _RequestSessionT = TypeVar("_RequestSessionT", bound=Union[requests.Session])
 
 
-def get_enc_password(original_pwd: str) -> str:
+def _get_enc_password(original_pwd: str) -> str:
     """Get encrypted password
 
     Args:
@@ -80,7 +80,7 @@ class ECJTU:
             str: Encrypted password
         """
         if self._enc_password is None:
-            self._enc_password = get_enc_password(self.password)
+            self._enc_password = _get_enc_password(self.password)
         return self._enc_password
 
     def login(self) -> None:

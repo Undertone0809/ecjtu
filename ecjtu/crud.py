@@ -5,11 +5,11 @@ from typing import List, Optional
 
 import requests
 from bs4 import BeautifulSoup
-from loguru import logger
 
 from ecjtu.constants import GET_CLASSES_URL, GET_GPA_URL
 from ecjtu.models import GPA, ScheduledCourse, Score
 from ecjtu.utils import get_cur_week_datetime, get_last_semester, get_today_date
+from ecjtu.utils.logger import logger
 
 
 class CRUDClient:
@@ -32,6 +32,14 @@ class CRUDClient:
 
 class ScheduledCourseCRUD(CRUDClient):
     def _fetch_courses(self, date: str) -> List[ScheduledCourse]:
+        """Fetch courses by date
+
+        Args:
+            date(str): The date to fetch, eg: 2023-01-01
+
+        Returns:
+            List[ScheduledCourse]: List of courses
+        """
         classes: List[ScheduledCourse] = []
 
         resp = self.client.post(GET_CLASSES_URL, data={"date": date})
@@ -45,6 +53,14 @@ class ScheduledCourseCRUD(CRUDClient):
         return classes
 
     def filter(self, *, date: str) -> List[ScheduledCourse]:
+        """Filter courses by date
+
+        Args:
+            date(str): The date to filter, eg: 2023-01-01
+
+        Returns:
+            List[ElectiveCourse]: List of courses
+        """
         return self._fetch_courses(date)
 
     def today(self) -> List[ScheduledCourse]:
@@ -57,6 +73,11 @@ class ScheduledCourseCRUD(CRUDClient):
         return self._fetch_courses(date)
 
     def this_week(self) -> List[List[ScheduledCourse]]:
+        """Get this week's classes
+
+        Returns:
+            List[List[ElectiveCourse]]: List of courses
+        """
         start_datetime: datetime = get_cur_week_datetime()
         week_classes: List[List[ScheduledCourse]] = []
 
@@ -69,6 +90,11 @@ class ScheduledCourseCRUD(CRUDClient):
 
 class GPACRUD(CRUDClient):
     def today(self) -> GPA:
+        """Get current GPA
+
+        Returns:
+            GPA: GPA model
+        """
         resp_html = self.client.get(GET_GPA_URL)
 
         if resp_html.status_code != 200:
@@ -86,6 +112,14 @@ class GPACRUD(CRUDClient):
 
 class ScoreCRUD(CRUDClient):
     def _fetch_scores(self, semester: str) -> List[Score]:
+        """Fetch scores by semester
+
+        Args:
+            semester(str): The semester to fetch, eg: 2023.1
+
+        Returns:
+            List[Score]: List of scores
+        """
         resp_html = self.client.get(GET_GPA_URL)
 
         if resp_html.status_code != 200:
