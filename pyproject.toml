@@ -35,22 +35,21 @@ classifiers = [  #! Update me
 
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
-
-typer = {extras = ["all"], version = "^0.4.0"}
-rich = "^10.14.0"
+python = ">=3.9"
 urllib3 = "1.26.18"
 pyopenssl = "24.1.0"
 requests = "2.31.0"
 beautifulsoup4 = "4.12.3"
 openpyxl = "3.1.2"
 pandas = "2.2.1"
+notebook = "^7.1.2"
+pydantic = "^2.6.4"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.3"
 pytest-html = "^3.1.1"
 pytest-cov = "^3.0.0"
-bandit = "^1.7.1"
 ruff = "^0.1.6"
 pre-commit = "^2.21.0"
 coverage = "^6.1.2"
