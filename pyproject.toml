@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "ecjtu"
-version = "0.1.0"
+version = "0.0.1"
 description = "ECJTU API SDK service"
 readme = "README.md"
 authors = ["ecjtu <zeeland4work@gmail.com>"]

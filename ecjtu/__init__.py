@@ -3,6 +3,8 @@
 
 import sys
 
+from ecjtu.client import ECJTU
+
 if sys.version_info >= (3, 8):
     from importlib import metadata as importlib_metadata
 else:
@@ -17,3 +19,4 @@ def get_version() -> str:
 
 
 version: str = get_version()
+__all__ = ["ECJTU"]
