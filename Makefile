@@ -31,8 +31,8 @@ polish-codestyle:
 	poetry run ruff format --config pyproject.toml .
 	poetry run ruff check --fix --config pyproject.toml .
 
-.PHONY: formatting
-formatting: polish-codestyle
+.PHONY: format
+format: polish-codestyle
 
 #* Linting
 .PHONY: test

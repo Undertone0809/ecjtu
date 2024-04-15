@@ -2,7 +2,6 @@
 
 <div align="center">
 
-[![Build status](https://github.com/Undertone0809/ecjtu/workflows/build/badge.svg?branch=main&event=push)](https://github.com/Undertone0809/ecjtu/actions?query=workflow%3Abuild)
 [![Python Version](https://img.shields.io/pypi/pyversions/ecjtu.svg)](https://pypi.org/project/ecjtu/)
 [![Dependencies Status](https://img.shields.io/badge/dependencies-up%20to%20date-brightgreen.svg)](https://github.com/Undertone0809/ecjtu/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Aapp%2Fdependabot)
 
@@ -13,9 +12,13 @@
 [![License](https://img.shields.io/github/license/Undertone0809/ecjtu)](https://github.com/Undertone0809/ecjtu/blob/main/LICENSE)
 ![Coverage Report](assets/images/coverage.svg)
 
-ECJTU API SDK service
+All your need is ECJTU API SDK service
 
 </div>
+
+## Introduction
+
+
 
 ## Quick start
 
@@ -60,13 +63,13 @@ make pre-commit-install
 <summary>Codestyle and type checks</summary>
 <p>
 
-Automatic formatting uses `ruff`.
+Automatic format uses `ruff`.
 
 ```bash
 make polish-codestyle
 
 # or use synonym
-make formatting
+make format
 ```
 
 Codestyle checks only, without rewriting files:
