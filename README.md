@@ -195,6 +195,16 @@ make cleanup
 </p>
 </details>
 
+## Log system
+
+When you run ECJTU, all the logs are stored in a log folder. Promptulate divides the logs by date, which means that each day will have a separate log file.
+
+You can find the logs in the following path:
+
+- windows: /Users/username/.ecjtu/logs
+- linux: /home/username/.ecjtu/logs
+
+
 ## 📈 Releases
 
 You can see the list of available releases on the [GitHub Releases](https://github.com/Undertone0809/ecjtu/releases) page.
