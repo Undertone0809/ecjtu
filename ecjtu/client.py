@@ -3,7 +3,7 @@ import os
 from typing import Generic, Optional, TypeVar, Union
 
 import httpx
-import requests
+# import requests
 from bs4 import BeautifulSoup
 from httpx import URL, Timeout
 
@@ -18,7 +18,7 @@ from ecjtu.constants import (
 from ecjtu.utils.logger import logger
 
 _HttpxClientT = TypeVar("_HttpxClientT", bound=Union[httpx.Client, httpx.AsyncClient])
-_RequestSessionT = TypeVar("_RequestSessionT", bound=Union[requests.Session])
+# _RequestSessionT = TypeVar("_RequestSessionT", bound=Union[httpx.Client])
 
 
 def _get_enc_password(original_pwd: str) -> str:
@@ -36,8 +36,8 @@ def _get_enc_password(original_pwd: str) -> str:
     return json.loads(_)["passwordEnc"]
 
 
-class BaseClient(Generic[_RequestSessionT]):
-    _client: _RequestSessionT
+class BaseClient(Generic[_HttpxClientT]):
+    _client: _HttpxClientT
     _version: str
     _base_url: URL
     max_retries: int
@@ -53,30 +53,28 @@ class ECJTU:
     """
 
     def __init__(
-        self,
-        *,
-        stud_id: Optional[str] = None,
-        password: Optional[str] = None,
-        client: Optional[requests.Session] = None,
+        self, stud_id: str, password: str, client: Optional[httpx.Client] = None
     ) -> None:
         """Initialize ECJTU client.
 
         Args:
-            stud_id(str): Student ID, default to env var ECJTU_STUDENT_ID if not
-                provided.
-            password(str): Password, default to env var ECJTU_PASSWORD if not provided.
-            client(Optional[requests.Session]): Requests session
+            stud_id(str): Student ID
+            password(str): Password
+            client(Optional[httpx.Client]): httpx Client
         """
         self.stud_id: str = stud_id or os.environ.get("ECJTU_STUDENT_ID")
         self.password: str = password or os.environ.get("ECJTU_PASSWORD")
         self._enc_password: Optional[str] = None
-        self._client: requests.Session = client or requests.Session()
+        if client:
+            client.verify = False
+        self._client: httpx.Client = client or httpx.Client(verify=False)
 
         self.login()
 
         self.scheduled_courses = crud.ScheduledCourseCRUD(self._client)
         self.scores = crud.ScoreCRUD(self._client)
         self.gpa = crud.GPACRUD(self._client)
+        self.elective_courses = crud.ElectiveCourse(self._client)
 
     @property
     def enc_password(self) -> str:
@@ -92,7 +90,7 @@ class ECJTU:
     def login(self) -> None:
         """Login to ECJTU system and update the client session."""
         logger.info("Logging in")
-        requests.packages.urllib3.disable_warnings()
+        # requests.packages.urllib3.disable_warnings()
 
         login_payload = {
             "username": self.stud_id,
@@ -116,19 +114,19 @@ class ECJTU:
         }
         headers.update(headers_append)
         response = self._client.post(
-            ECJTU_LOGIN_URL, data=login_payload, headers=headers, allow_redirects=False
+            ECJTU_LOGIN_URL, data=login_payload, headers=headers,
         )
 
         if "CASTGC" not in response.cookies:
             raise ValueError("Error in account or password")
 
         self._client.get(
-            JWXT_LOGIN_URL, headers=headers, allow_redirects=False, verify=False
+            JWXT_LOGIN_URL, headers=headers
         )
 
-        response_url = self._client.get(ECJTU2JWXT_URL, allow_redirects=False)
+        response_url = self._client.get(ECJTU2JWXT_URL)
 
-        result = self._client.get(response_url.headers["location"])
+        result = self._client.get(response_url.headers["location"],follow_redirects=True)
 
         if result.status_code != 200:
             raise ValueError(

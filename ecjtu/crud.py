@@ -3,11 +3,12 @@ from abc import abstractmethod
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-import requests
+# import requests
+import httpx
 from bs4 import BeautifulSoup
 
-from ecjtu.constants import GET_CLASSES_URL, GET_GPA_URL
-from ecjtu.models import GPA, ScheduledCourse, Score
+from ecjtu.constants import GET_CLASSES_URL, GET_GPA_URL, GET_ELERTIVE_COURSE_URL_TEMPLATE
+from ecjtu.models import GPA, ScheduledCourse, Score, ElectiveCourse
 from ecjtu.utils import get_cur_week_datetime, get_last_semester, get_today_date
 from ecjtu.utils.logger import logger
 
@@ -17,8 +18,8 @@ class CRUDClient:
     CRUD mixin for resources. This class provides basic CRUD operations for resources.
     """
 
-    def __init__(self, client: requests.Session):
-        self.client: requests.Session = client
+    def __init__(self, client: httpx.Client):
+        self.client: httpx.Client = client
         self.cache: dict = {}
 
     @abstractmethod
@@ -166,3 +167,60 @@ class ScoreCRUD(CRUDClient):
             List[Score]: List of scores
         """
         return self._fetch_scores(semester)
+
+class ElectiveCourse(CRUDClient):
+    def _fetch_elecourses(self, semester: str) -> List[ElectiveCourse]:
+        """Fetch elecourses by date
+
+        Args:
+            semester(str): The semester to fetch, eg: 2023.1
+
+        Returns:
+            List[ElectiveCourse]: List of courses
+        """
+
+        GET_ELERTIVE_COURSE_URL = GET_ELERTIVE_COURSE_URL_TEMPLATE.format(semester=semester)
+
+        resp_html = self.client.get(GET_ELERTIVE_COURSE_URL)
+
+        if resp_html.status_code != 200:
+            raise Exception(f"Failed to get elective courses, status code: {resp_html.status_code}")
+        
+        ele_courses: List[ElectiveCourse] = []
+        soup = BeautifulSoup(resp_html.text, "html.parser")
+        
+        tbody_tag = soup.find("tbody")
+        tr_list = tbody_tag.find_all("tr")
+
+        for tr_tag in tr_list:
+            td_tags = tr_tag.find_all("td")
+            td = [td.text for td in td_tags]
+            ele_course = ElectiveCourse(
+                semester=td[0],
+                class_name=td[11],
+                class_type=td[4],
+                class_assessment_method=td[5],
+                class_info=td[8],
+                class_number=td[12],
+                credit=float(td[7]),
+                teacher=td[9]
+            )
+            ele_courses.append(ele_course)
+
+        return ele_courses
+    
+    def today(self, *args, **kwargs):
+        pass
+
+    def filter(self, *, semester: Optional[str] = None, **kwargs) -> List[ElectiveCourse]:
+        """
+        Filter elective courses by specified conditions.
+
+        Args:
+            semester(Optional[str]): The semester to filter, eg: 2023.1, 2023.2
+
+        Returns:
+            List[ElectiveCourse]: List of elective courses
+        """
+        return self._fetch_elecourses(semester=semester)
+        
