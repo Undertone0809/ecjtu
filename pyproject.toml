@@ -30,7 +30,7 @@ classifiers = [  #! Update me
 
 [tool.poetry.scripts]
 # Entry points for the package https://python-poetry.org/docs/pyproject/#scripts
-"ecjtu" = "ecjtu.__main__:app"
+"ecjtu" = "ecjtu.__main__:main"
 
 
 

@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Generic, Optional, TypeVar, Union
 
 import httpx
@@ -52,17 +53,22 @@ class ECJTU:
     """
 
     def __init__(
-        self, stud_id: str, password: str, client: Optional[requests.Session] = None
+        self,
+        *,
+        stud_id: Optional[str] = None,
+        password: Optional[str] = None,
+        client: Optional[requests.Session] = None,
     ) -> None:
         """Initialize ECJTU client.
 
         Args:
-            stud_id(str): Student ID
-            password(str): Password
+            stud_id(str): Student ID, default to env var ECJTU_STUDENT_ID if not
+                provided.
+            password(str): Password, default to env var ECJTU_PASSWORD if not provided.
             client(Optional[requests.Session]): Requests session
         """
-        self.stud_id: str = stud_id
-        self.password: str = password
+        self.stud_id: str = stud_id or os.environ.get("ECJTU_STUDENT_ID")
+        self.password: str = password or os.environ.get("ECJTU_PASSWORD")
         self._enc_password: Optional[str] = None
         self._client: requests.Session = client or requests.Session()
 
