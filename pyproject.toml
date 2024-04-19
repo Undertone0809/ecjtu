@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "ecjtu"
-version = "0.1.0"
+version = "0.1.1"
 description = "ECJTU API SDK service"
 readme = "README.md"
 authors = ["ecjtu <zeeland4work@gmail.com>"]
@@ -33,7 +33,6 @@ python = ">=3.8"
 urllib3 = "1.26.18"
 pyopenssl = "24.1.0"
 beautifulsoup4 = "4.12.3"
-notebook = "^7.1.2"
 pydantic = "^2.6.4"
 
 [tool.poetry.dev-dependencies]
