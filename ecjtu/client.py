@@ -1,7 +1,7 @@
 import json
 import os
 import typing
-from typing import Generic, TypeVar, Union
+from typing import Generic, Optional, TypeVar, Union
 
 import httpx
 from bs4 import BeautifulSoup
@@ -62,7 +62,9 @@ class BaseClient(Generic[_HttpxClientT]):
 
 
 class ECJTU(BaseClient[httpx.Client], httpx.Client):
-    def __init__(self, stud_id: str, password: str, **kwargs) -> None:
+    def __init__(
+        self, stud_id: Optional[str] = None, password: Optional[str] = None, **kwargs
+    ) -> None:
         """Initialize ECJTU client.
 
         Args:
@@ -215,7 +217,7 @@ class ECJTU(BaseClient[httpx.Client], httpx.Client):
 
         logger.info("Login successful")
 
-    def start_api_server(self):
+    def start_api_server(self, port: int = 8000):
         # TODO: Start a FastAPI server
         pass
 
