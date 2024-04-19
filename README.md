@@ -18,7 +18,7 @@ All your need is ECJTU API SDK service
 
 ## 📚 Introduction
 
-ecjtu 是一个用 Pythonic 的 ECJTU API SDK，旨在为开发者提供一个简洁、高效的方式来访问和管理其学籍资料、成绩、课表等信息，构建自己的应用程序 🌟。
+ecjtu 是一个 Pythonic 的 ECJTU API SDK，旨在为开发者提供一个简洁、高效的方式来访问和管理其学籍、成绩、课表等信息，构建自己的应用程序 🌟。
 
 欢迎校友加入 EFC（ECJTU For Code），我们致力于构建一个充满活力的平台，集结校园内外对技术充满热情的开发者、技术爱好者。在这里，您可以自由地分享您的编程知识，展示您的创新项目，以及与志同道合的人一起推动开源文化的发展，make sth happen
 
@@ -214,6 +214,28 @@ semester='2023.2' class_name='Java程序设计(B)(20232-2)【小1班】' class_t
 semester='2023.2' class_name='综合课程设计Ⅱ(20232-10)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='' class_number='7' credit=2.0 teacher='王珏'
 semester='2023.2' class_name='日语(2022-1)【小3班】' class_type='必修课' class_assessment_method='考试' class_info='第1-16周 星期四 第9,10节[25-121]' class_number='21' credit=2.0 teacher='谢幸荣(1-16)'
 semester='2023.2' class_name='定向越野Ⅳ(20232-1)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='第1-16周 星期三 第7,8节[北区田径场3]' class_number='14' credit=1.0 teacher='余振东'
+```
+
+**根据学期查询选修的课程**
+
+```python
+courses = client.elective_courses.filter(semester="2022.1")
+
+for course in courses:
+    print(course)
+```
+
+```text
+semester='2022.1' class_name='Linux应用与编程(20221-1)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='第1-16周 星期一 第3,4节[25-424]' class_number='2' credit=2.0 teacher='李光辉'
+semester='2022.1' class_name='Java语言程序设计(20221-1)【小1班】' class_type='限选课' class_assessment_method='考查' class_info='第1-16周 星期二 第3,4节[25-201]' class_number='2' credit=2.0 teacher='丁振凡'
+semester='2022.1' class_name='单片机原理及接口技术(20221-1)【小1班】' class_type='必修课' class_assessment_method='考试' class_info='第1-14周 星期三 第3,4节[25-201]|第1-14周 星期一 第5,6节[14-103]' class_number='3' credit=3.5 teacher='陈梅'
+semester='2022.1' class_name='物联网控制技术(20221-1)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='第1-16周 星期三 第1,2节[25-404]' class_number='2' credit=2.0 teacher='谭林丰'
+semester='2022.1' class_name='单片机原理及接口技术课程设计(20221-1)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='' class_number='2' credit=1.0 teacher='周洁'
+semester='2022.1' class_name='物联网系统实习(20221-1)【小1班】' class_type='必修课' class_assessment_method='考查' class_info='' class_number='2' credit=2.0 teacher='柳凌峰'
+semester='2022.1' class_name='毛泽东思想和中国特色社会主义理论体系概论(20221-2)【小3班】' class_type='必修课' class_assessment_method='考试' class_info='第1-16周 星期二 第1,2节(双)[14-212]|第1-16周 星期三 第5,6节[14-408]|第1-16周 星期四 第5,6节[10-113]' class_number='11' credit=5.0 teacher='刘佳'
+semester='2022.1' class_name='操作系统(20221-1)【小1班】' class_type='学科任选课' class_assessment_method='考查' class_info='第1-16周 星期五 第3,4节[14-109]' class_number='2' credit=2.0 teacher='舒文豪'
+semester='2022.1' class_name='算法设计与分析(20221-1)【小1班】' class_type='专业任选课' class_assessment_method='考查' class_info='第1-16周 星期五 第1,2节[25-202]' class_number='2' credit=2.0 teacher='李广丽'
+semester='2022.1' class_name='动态网站开发(20221-1)【小1班】' class_type='专业任选课' class_assessment_method='考查' class_info='第1-16周 星期二 第5,6节[25-406]' class_number='3' credit=2.0 teacher='曾辉'
 ```
 
 ### 异步版本
