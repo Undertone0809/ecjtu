@@ -3,6 +3,7 @@ import os
 from typing import Generic, Optional, TypeVar, Union
 
 import httpx
+
 # import requests
 from bs4 import BeautifulSoup
 from httpx import URL, Timeout
@@ -74,7 +75,7 @@ class ECJTU:
         self.scheduled_courses = crud.ScheduledCourseCRUD(self._client)
         self.scores = crud.ScoreCRUD(self._client)
         self.gpa = crud.GPACRUD(self._client)
-        self.elective_courses = crud.ElectiveCourse(self._client)
+        self.elective_courses = crud.ElectiveCourseCRUD(self._client)
 
     @property
     def enc_password(self) -> str:
@@ -99,7 +100,8 @@ class ECJTU:
         }
 
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\
+                  (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
             # noqa
             "Host": CAS_ECJTU_DOMAIN,
         }
@@ -114,19 +116,21 @@ class ECJTU:
         }
         headers.update(headers_append)
         response = self._client.post(
-            ECJTU_LOGIN_URL, data=login_payload, headers=headers,
+            ECJTU_LOGIN_URL,
+            data=login_payload,
+            headers=headers,
         )
 
         if "CASTGC" not in response.cookies:
             raise ValueError("Error in account or password")
 
-        self._client.get(
-            JWXT_LOGIN_URL, headers=headers
-        )
+        self._client.get(JWXT_LOGIN_URL, headers=headers)
 
         response_url = self._client.get(ECJTU2JWXT_URL)
 
-        result = self._client.get(response_url.headers["location"],follow_redirects=True)
+        result = self._client.get(
+            response_url.headers["location"], follow_redirects=True
+        )
 
         if result.status_code != 200:
             raise ValueError(

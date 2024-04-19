@@ -7,9 +7,18 @@ from typing import List, Optional
 import httpx
 from bs4 import BeautifulSoup
 
-from ecjtu.constants import GET_CLASSES_URL, GET_GPA_URL, GET_ELERTIVE_COURSE_URL_TEMPLATE
-from ecjtu.models import GPA, ScheduledCourse, Score, ElectiveCourse
-from ecjtu.utils import get_cur_week_datetime, get_last_semester, get_today_date
+from ecjtu.constants import (
+    GET_CLASSES_URL,
+    GET_ELERTIVE_COURSE_URL_TEMPLATE,
+    GET_GPA_URL,
+)
+from ecjtu.models import GPA, ElectiveCourse, ScheduledCourse, Score
+from ecjtu.utils import (
+    get_cur_semester,
+    get_cur_week_datetime,
+    get_last_semester,
+    get_today_date,
+)
 from ecjtu.utils.logger import logger
 
 
@@ -168,7 +177,8 @@ class ScoreCRUD(CRUDClient):
         """
         return self._fetch_scores(semester)
 
-class ElectiveCourse(CRUDClient):
+
+class ElectiveCourseCRUD(CRUDClient):
     def _fetch_elecourses(self, semester: str) -> List[ElectiveCourse]:
         """Fetch elecourses by date
 
@@ -179,16 +189,18 @@ class ElectiveCourse(CRUDClient):
             List[ElectiveCourse]: List of courses
         """
 
-        GET_ELERTIVE_COURSE_URL = GET_ELERTIVE_COURSE_URL_TEMPLATE.format(semester=semester)
+        get_elertive_course_url = GET_ELERTIVE_COURSE_URL_TEMPLATE + "?term=" + semester
 
-        resp_html = self.client.get(GET_ELERTIVE_COURSE_URL)
+        resp_html = self.client.get(get_elertive_course_url)
 
         if resp_html.status_code != 200:
-            raise Exception(f"Failed to get elective courses, status code: {resp_html.status_code}")
-        
+            raise Exception(
+                f"Failed to get elective courses, status code: {resp_html.status_code}"
+            )
+
         ele_courses: List[ElectiveCourse] = []
         soup = BeautifulSoup(resp_html.text, "html.parser")
-        
+
         tbody_tag = soup.find("tbody")
         tr_list = tbody_tag.find_all("tr")
 
@@ -203,16 +215,25 @@ class ElectiveCourse(CRUDClient):
                 class_info=td[8],
                 class_number=td[12],
                 credit=float(td[7]),
-                teacher=td[9]
+                teacher=td[9],
             )
             ele_courses.append(ele_course)
 
         return ele_courses
-    
-    def today(self, *args, **kwargs):
-        pass
 
-    def filter(self, *, semester: Optional[str] = None, **kwargs) -> List[ElectiveCourse]:
+    def today(self, *args, **kwargs):
+        """
+        Get today's elective courses
+
+        Returns:
+            List[ElectiveCourse]: List of elective courses
+        """
+        semester = get_cur_semester()
+        return self._fetch_elecourses(semester)
+
+    def filter(
+        self, *, semester: Optional[str] = None, **kwargs
+    ) -> List[ElectiveCourse]:
         """
         Filter elective courses by specified conditions.
 
@@ -222,5 +243,4 @@ class ElectiveCourse(CRUDClient):
         Returns:
             List[ElectiveCourse]: List of elective courses
         """
-        return self._fetch_elecourses(semester=semester)
-        
+        return self._fetch_elecourses(semester)

@@ -2,15 +2,18 @@ from pydantic import BaseModel, Field
 
 
 class ElectiveCourse(BaseModel):
-    semester: str = Field(..., description="学期", examples=["2023-1"])
-    class_name: str = Field(..., description="教学班名称", examples=["高等数学(20232-23)[小2班]"])
+    semester: str = Field(..., description="学期", examples=["2023.1"])
+    class_name: str = Field(
+        ..., description="教学班名称", examples=["高等数学(20232-23)[小2班]"]
+    )
     class_type: str = Field(..., description="课程类型", examples=["必修课"])
     class_assessment_method: str = Field(..., description="考核方式", examples=["考试"])
-    class_info: str = Field(..., description="上课信息", examples=["第1-4周 星期一 第7,8节[31-313]"])
+    class_info: str = Field(
+        ..., description="上课信息", examples=["第1-4周 星期一 第7,8节[31-313]"]
+    )
     class_number: str = Field(..., description="课程编号", examples=["19"])
     credit: float = Field(..., description="学分", examples=[3.0])
     teacher: str = Field(..., description="教师", examples=["张三"])
-    
 
 
 class ScheduledCourse(BaseModel):
