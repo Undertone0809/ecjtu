@@ -1,6 +1,7 @@
 RAW_RESPONSE_HEADER = "X-Stainless-Raw-Response"
 
 ECJTU_DOMAIN = "ecjtu.edu.cn"
+PORTAL_ECJTU_DOMAIN = f"http://portal.{ECJTU_DOMAIN}/dcp/index.jsp"
 CAS_ECJTU_DOMAIN = f"cas.{ECJTU_DOMAIN}"
 JWXT_ECJTU_DOMAIN = f"jwxt.{ECJTU_DOMAIN}"
 PWD_ENC_URL = f"http://{CAS_ECJTU_DOMAIN}/cas/loginPasswdEnc"

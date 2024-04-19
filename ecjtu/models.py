@@ -35,7 +35,7 @@ class GPA(BaseModel):
 
 
 class Score(BaseModel):
-    semester: str = Field(..., description="课程学期", examples=["2023-1"])
+    semester: str = Field(..., description="课程学期", examples=["2023.1"])
     course_name: str = Field(..., description="课程名", examples=["高等数学"])
     course_nature: str = Field(..., description="课程性质", examples=["必修"])
     credit: float = Field(..., description="学分", examples=[3.0])
