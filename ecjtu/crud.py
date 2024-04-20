@@ -69,17 +69,10 @@ class ScheduledCourseCRUD(CRUDClient):
         Returns:
             List[ScheduledCourse]: List of courses
         """
-        classes: List[ScheduledCourse] = []
-
         resp = self.client.post(GET_CLASSES_URL, data={"date": date})
-        for k, v in resp.json().items():
-            if k == "weekcalendarpojoList":
-                for item in v:
-                    cls = ScheduledCourse.model_validate(item)
-                    logger.info(cls)
-                    classes.append(cls)
 
-        return classes
+        _ = resp.json().get("weekcalendarpojoList", [])
+        return list(ScheduledCourse.model_validate(cls) for cls in _)
 
     def filter(self, *, date: str) -> List[ScheduledCourse]:
         """Filter courses by date
@@ -127,17 +120,10 @@ class AsyncScheduledCourseCRUD(AsyncCRUDClient):
         Returns:
             List[ScheduledCourse]: List of courses
         """
-        classes: List[ScheduledCourse] = []
-
         resp = await self.client.post(GET_CLASSES_URL, data={"date": date})
-        for k, v in resp.json().items():
-            if k == "weekcalendarpojoList":
-                for item in v:
-                    cls = ScheduledCourse.model_validate(item)
-                    logger.info(cls)
-                    classes.append(cls)
 
-        return classes
+        _ = resp.json().get("weekcalendarpojoList", [])
+        return list(ScheduledCourse.model_validate(cls) for cls in _)
 
     async def filter(self, *, date: str) -> List[ScheduledCourse]:
         """Filter courses by date
