@@ -1,13 +1,22 @@
 from starlette.middleware.base import BaseHTTPMiddleware
-from . import respose_result,auth
+
+from . import auth, respose_result
 
 
 class MyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         # 不被拦截的路由
-        secure_routes = ["/token","/login","/","/docs","/docs/","/openapi.json","/favicon.ico"]
+        secure_routes = [
+            "/token",
+            "/login",
+            "/",
+            "/docs",
+            "/docs/",
+            "/openapi.json",
+            "/favicon.ico",
+        ]
 
-        response =respose_result.ResponseResult.auth_error()
+        response = respose_result.ResponseResult.auth_error()
         path = request.url.path
 
         if path not in secure_routes:
@@ -22,7 +31,3 @@ class MyMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
 
         return response
-
-
-
-        
