@@ -1,14 +1,3 @@
-"""
-构建response返回结果
-{
-    "code": 200,
-    "msg": "success",
-    "data": {
-        "name": "张三",
-        "age": 18
-    }
-}
-"""
 from typing import Any, Dict, Union
 from fastapi.responses import JSONResponse
 

@@ -1,5 +1,4 @@
 import base64
-# from ecjtu.client import _get_enc_password
 KEY = "zxcvbnmasdgfhjklpoiuytrewq"
 
 def encode(stud_id, pwd):
