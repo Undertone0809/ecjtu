@@ -1,9 +1,12 @@
+import datetime
+import re
+
 from fastapi import FastAPI, Header
 from fastapi.responses import RedirectResponse
 
 from ecjtu.client import ECJTU
 
-from . import auth, ecjtu_schema, middle, respose_result
+from . import auth, middle, respose_result, schema
 
 app = FastAPI(title="ECJTU API", description="API for ECJTU")
 
@@ -22,21 +25,37 @@ def push_docs():
     summary="登录",
     description="登录并获取token,以下所有接口都需要token才可以使用",
 )
-def login(user: ecjtu_schema.UserLoginSchema):
-    client = ECJTU(user.stud_id, user.password)
+def login(user: schema.UserLoginSchema):
     try:
-        client.login()
+        access_token, refresh_token = auth.create_tokens(user.stud_id, user.password)
     except Exception as e:
         return respose_result.ResponseResult.error(str(e))
-    token = auth.encode(user.stud_id, user.password)
-    return respose_result.ResponseResult.success({"token": token})
+
+    return respose_result.ResponseResult.success(
+        {"access_token": access_token, "refresh_token": refresh_token}
+    )
+
+
+@app.post(
+    "/refresh_token",
+    tags=["登录"],
+    summary="刷新access_token",
+    description="刷新access_token",
+)
+def refresh_token(data: str = None):
+    try:
+        access_token = auth.refresh_access_token(data)
+    except Exception as e:
+        return respose_result.ResponseResult.error(str(e))
+    return respose_result.ResponseResult.success({"access_token": access_token})
 
 
 # gpa接口
 @app.get("/gpa", tags=["GPA"], summary="获取GPA", description="获取当学期GPA")
 def gpa(token: str = Header(None)):
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         gpa = client.gpa.today()
     except Exception as e:
@@ -47,8 +66,9 @@ def gpa(token: str = Header(None)):
 # 课表接口
 @app.get("/schedule", tags=["课表"], summary="获取当天课表", description="获取当天课表")
 def schedule(token: str = Header(None)):
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         schedule = client.scheduled_courses.today()
     except Exception as e:
@@ -67,10 +87,16 @@ def schedule(token: str = Header(None)):
 )
 def schedule_date(token: str = Header(None), date: str = None):
     # date(str): The date to filter, eg: 2023-01-01
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
     try:
-        scheduled_courses = client.scheduled_courses.filter(date=date)
+        valid_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+    except ValueError:
+        return respose_result.ResponseResult.param_error("日期格式错误")
+
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
+    try:
+        scheduled_courses = client.scheduled_courses.filter(date=valid_date)
     except Exception as e:
         return respose_result.ResponseResult.error(str(e))
     schedule_list = []
@@ -80,11 +106,12 @@ def schedule_date(token: str = Header(None), date: str = None):
 
 
 @app.get(
-    "/schedule/week", tags=["课表"], summary="获取本周课表", description="获取本周课表"
+    "/schedule_week", tags=["课表"], summary="获取本周课表", description="获取本周课表"
 )
 def schedule_week(token: str = Header(None)):
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         schedule = client.scheduled_courses.this_week()
     except Exception as e:
@@ -101,8 +128,9 @@ def schedule_week(token: str = Header(None)):
 # 成绩接口
 @app.get("/score", tags=["成绩"], summary="获取当前成绩", description="获取当学期成绩")
 def score(token: str = Header(None)):
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         score = client.scores.today()
     except Exception as e:
@@ -121,8 +149,11 @@ def score(token: str = Header(None)):
 )
 def score_semester(token: str = Header(None), semester: str = None):
     # semester(Optional[str]): The semester to filter, eg: 2023.1, 2023.2
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    if not re.match(r"\d{4}\.[12]", semester):
+        return respose_result.ResponseResult.param_error("学期格式错误")
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         scores = client.scores.filter(semester=semester)
     except Exception as e:
@@ -141,8 +172,9 @@ def score_semester(token: str = Header(None), semester: str = None):
     description="获取当前学期选课情况",
 )
 def elective_courses(token: str = Header(None)):
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         elective_courses = client.elective_courses.today()
     except Exception as e:
@@ -161,8 +193,11 @@ def elective_courses(token: str = Header(None)):
 )
 def elective_courses_semester(token: str = Header(None), semester: str = None):
     # semester(Optional[str]): The semester to filter, eg: 2023.1, 2023.2
-    stud_id, password = auth.decode(token)
-    client = ECJTU(stud_id, password)
+    if not re.match(r"\d{4}\.[12]", semester):
+        return respose_result.ResponseResult.param_error("学期格式错误")
+    stud_id = auth.get_stud_id(token)
+    cookie = auth.get_cookie(stud_id)
+    client = ECJTU(cookie=cookie)
     try:
         elective_courses = client.elective_courses.filter(semester=semester)
     except Exception as e:

@@ -31,6 +31,14 @@ class ResponseResult:
         )
 
     @staticmethod
+    def param_error(
+        data: Union[Dict[str, Any], Any] = None, msg: str = "param error"
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=400, content={"code": 400, "msg": msg, "data": data}
+        )
+
+    @staticmethod
     def error(
         data: Union[Dict[str, Any], Any] = None, msg: str = "error"
     ) -> JSONResponse:

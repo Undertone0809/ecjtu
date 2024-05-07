@@ -7,7 +7,7 @@ class MyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         # 不被拦截的路由
         secure_routes = [
-            "/token",
+            "/refresh_token",
             "/login",
             "/",
             "/docs",
@@ -24,9 +24,15 @@ class MyMiddleware(BaseHTTPMiddleware):
             # 是否存在token
             if not header:
                 return response
-            token = header
-            stud_id, enc_pwd = auth.decode(token)
-            if not stud_id or not enc_pwd:
+            # 是否过期
+            try:
+                stud_id = auth.get_stud_id(header)
+            except Exception as e:
+                return respose_result.ResponseResult.auth_error(str(e))
+            if not stud_id:
+                response = respose_result.ResponseResult.auth_error(
+                    "access_token令牌已过期，请刷新"
+                )
                 return response
         response = await call_next(request)
 
