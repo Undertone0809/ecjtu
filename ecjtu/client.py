@@ -224,10 +224,6 @@ class ECJTU(BaseClient[httpx.Client], httpx.Client):
 
         logger.info("Login successful")
 
-    def start_api_server(self, port: int = 8000):
-        # TODO: Start a FastAPI server
-        pass
-
 
 class AsyncECJTU(BaseClient[httpx.AsyncClient], httpx.AsyncClient):
     def __init__(self, stud_id: str, password: str, **kwargs) -> None:
@@ -384,7 +380,3 @@ class AsyncECJTU(BaseClient[httpx.AsyncClient], httpx.AsyncClient):
             )
 
         logger.info("Login successful")
-
-    async def start_api_server(self):
-        # TODO: Start a FastAPI server
-        pass

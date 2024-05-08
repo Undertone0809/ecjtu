@@ -15,7 +15,7 @@ class FileAuth(BaseORMModel):
         stud_id: Optional[str] = None,
         token: str = None,
         cookie: Optional[List[Dict]] = None,
-    ):
+    ) -> None:
         super().__init__()
         self.stud_id = stud_id
         self.token = token

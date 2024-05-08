@@ -261,6 +261,67 @@ async def main():
 asyncio.run(main())
 ```
 
+## 提供 web 服务器，提供 API 服务
+
+### 启动方法
+1. 通过python代码启动
+    ```py
+    from ecjtu.ecjtu_api.api import start_api_server
+
+    def main():
+        start_api_server(port=8080)
+    
+    if __name__ == "__main__":
+        main()
+    ```
+2. 通过命令行启动
+    ```shell
+    python ecjtu/server.py --port 8080
+    ```
+
+### 使用方法
+1. 启动之后，命令行会显示如下内容
+    ```shell
+    INFO:     Started server process [2545]
+    INFO:     Waiting for application startup.
+    INFO:     Application startup complete.
+    INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+    ```
+2. 此时通过浏览器访问 http://127.0.0.1:8080 可以看到api在线调试文档
+
+### 本项目提供的api接口
+
+详细信息可以参考源代码当中examples/ecjtu-api.md当中
+
+1. 登录
+    * post /login 
+    通过学号和密码进行登录，获取access_token和refresh_token,access_token用于之后的所有请求,refresh_token用于刷新access_token
+
+    * post /refresh_token
+    当access_token过期时，可以使用refresh_token刷新access_token。
+2. gpa
+
+    * get /gpa
+    获取当前gpa情况
+3. 课表
+    * get /schedule
+        获取今日课表
+    * get /schedule/{date}
+        获取指定日期课表 date格式为2024-05-01
+    * get /schedule/week
+        获取本周课表
+4. 成绩
+    * get /score
+        获取目前成绩
+    * /score/{semester}
+        获取指定学期成绩 semester格式为2023.1
+5. 选课情况
+    * get /elective_courses
+        获取当前选课信息
+    * get /elective_courses/{semester}
+        获取指定学期选课信息 semester格式为2023.1
+
+
 ## 🧰 本地开发
 
 欢迎贡献代码与二次开发，你可以通过以下方式安装依赖，推荐使用 Conda 作为环境管理工具，首先创建一个新的环境并激活：
@@ -281,7 +342,6 @@ poetry install
 
 下面列举了一些未来可能添加的功能，欢迎贡献代码，提出建议。
 
-- [ ] 添加 web 服务器，提供 API 服务
 - [ ] 提供 vercel 一键部署
 - [ ] 提供 docker 快速服务部署
 - [ ] 增加考试查询

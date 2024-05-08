@@ -33,7 +33,7 @@ Base URLs:
 
 POST /login
 
-登录并获取token,以下所有接口都需要token才可以使用
+登录获取access_token和refresh_token,access_token用于之后的所有请求,refresh_token用于刷新access_token
 
 > Body 请求参数
 
@@ -46,9 +46,9 @@ POST /login
 
 ### 请求参数
 
-|名称|位置|类型|必选|中文名|说明|
-|---|---|---|---|---|---|
-|body|body|[UserLoginSchema](#schemauserloginschema)| 否 | UserLoginSchema|none|
+|名称|位置|类型|必选|说明|
+|---|---|---|---|---|
+|body|body|object| 否 |none|
 
 > 返回示例
 
@@ -63,7 +63,40 @@ POST /login
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
+
+<a id="opIdrefresh_token_refresh_token_post"></a>
+
+## POST 刷新access_token
+
+POST /refresh_token
+
+刷新access_token
+
+### 请求参数
+
+|名称|位置|类型|必选|中文名|说明|
+|---|---|---|---|---|---|
+|data|query|string| 否 | Data|none|
+
+> 返回示例
+
+> 200 Response
+
+```json
+"string"
+```
+
+### 返回结果
+
+|状态码|状态码含义|说明|数据模型|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 # GPA
 
@@ -94,7 +127,9 @@ GET /gpa
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 # 课表
 
@@ -125,7 +160,9 @@ GET /schedule
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 <a id="opIdschedule_date_schedule__date__get"></a>
 
@@ -155,13 +192,15 @@ GET /schedule/{date}
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 <a id="opIdschedule_week_schedule_week_get"></a>
 
 ## GET 获取本周课表
 
-GET /schedule/week
+GET /schedule_week
 
 获取本周课表
 
@@ -184,7 +223,9 @@ GET /schedule/week
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 # 成绩
 
@@ -215,7 +256,9 @@ GET /score
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 <a id="opIdscore_semester_score__semester__get"></a>
 
@@ -245,7 +288,9 @@ GET /score/{semester}
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 # 选课情况
 
@@ -276,7 +321,9 @@ GET /elective_courses
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|
+
+### 返回数据结构
 
 <a id="opIdelective_courses_semester_elective_courses__semester__get"></a>
 
@@ -306,4 +353,4 @@ GET /elective_courses/{semester}
 |状态码|状态码含义|说明|数据模型|
 |---|---|---|---|
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Successful Response|string|
-|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|[HTTPValidationError](#schemahttpvalidationerror)|
+|422|[Unprocessable Entity](https://tools.ietf.org/html/rfc2518#section-10.3)|Validation Error|Inline|

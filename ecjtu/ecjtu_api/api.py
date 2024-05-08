@@ -23,7 +23,7 @@ def push_docs():
     "/login",
     tags=["登录"],
     summary="登录",
-    description="登录并获取token,以下所有接口都需要token才可以使用",
+    description="登录获取access_token和refresh_token,access_token用于之后的所有请求,refresh_token用于刷新access_token",
 )
 def login(user: schema.UserLoginSchema):
     try:

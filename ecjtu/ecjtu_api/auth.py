@@ -1,6 +1,7 @@
 import base64
 import datetime
 
+import httpx
 from cushy_storage import CushyOrmCache
 
 from ecjtu.client import ECJTU
@@ -10,18 +11,18 @@ from ecjtu.utils.logger import get_path
 from . import schema
 
 
-def encode_data(data):
+def encode_data(data: str) -> str:
     # 将数据编码为base64字符串
     return base64.b64encode(data.encode()).decode()
 
 
-def decode_data(encoded_data):
+def decode_data(encoded_data: str) -> str:
     # 解码base64字符串
     return base64.b64decode(encoded_data.encode()).decode()
 
 
 # 双token加密
-def create_tokens(stud_id, pwd):
+def create_tokens(stud_id: str, pwd: str) -> tuple[str, str]:
     access_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
         minutes=60
     )
@@ -56,7 +57,7 @@ def create_tokens(stud_id, pwd):
 
 
 # 刷新access_token
-def refresh_access_token(refresh_token):
+def refresh_access_token(refresh_token: str) -> str:
     data = decode_data(refresh_token)
     print(data)
     stud_id = data.split(":")[0]
@@ -78,16 +79,15 @@ def refresh_access_token(refresh_token):
 
 
 # 验证和读取access_token的stud_id
-def get_stud_id(access_token):
+def get_stud_id(access_token: str) -> str:
     try:
         data = decode_data(access_token)
         stud_file = CushyOrmCache(get_path())
         stud = stud_file.query("FileAuth").filter(token=access_token).first()
         if not stud:
             raise Exception("无效令牌")
-    except Exception as e:
-        # raise Exception("无效令牌")
-        raise e
+    except Exception:
+        raise Exception("无效令牌")
     stud_id = data.split(":")[0]
     token_time = data.split(":")[2]
 
@@ -98,11 +98,10 @@ def get_stud_id(access_token):
     if current_time > expire_time:
         raise Exception("令牌已过期，请刷新")
     return stud_id
-    # return data.split(':')[0]
 
 
 # 读取cookie
-def get_cookie(stud_id):
+def get_cookie(stud_id: str) -> httpx.Cookies:
     stud_file = CushyOrmCache(get_path())
     stud = stud_file.query("FileAuth").filter(stud_id=stud_id).first()
     cookies = list_tocookie(stud.cookie)
