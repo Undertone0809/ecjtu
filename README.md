@@ -285,6 +285,8 @@ poetry install
 - [ ] 提供 vercel 一键部署
 - [ ] 提供 docker 快速服务部署
 - [ ] 增加考试查询
+- [ ] 增加实现查询
+- [ ] 增加衍生项目: promptulate + ecjtu + bot
 
 ## 📖 Makefile usage
 
