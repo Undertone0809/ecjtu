@@ -1,11 +1,11 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from . import auth, respose_result
+from ecjtu.ecjtu_api import auth, respose_result
 
 
 class MyMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        # 不被拦截的路由
+        # not secure routes
         secure_routes = [
             "/refresh_token",
             "/login",
@@ -21,10 +21,10 @@ class MyMiddleware(BaseHTTPMiddleware):
 
         if path not in secure_routes:
             header = request.headers.get("token")
-            # 是否存在token
+            # if not header, return response
             if not header:
                 return response
-            # 是否过期
+            # get stud_id from access_token
             try:
                 stud_id = auth.get_stud_id(header)
             except Exception as e:

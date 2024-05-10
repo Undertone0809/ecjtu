@@ -5,24 +5,45 @@ import httpx
 from cushy_storage import CushyOrmCache
 
 from ecjtu.client import ECJTU
+from ecjtu.ecjtu_api import schema
 from ecjtu.utils.cookie import cookies_tolist, list_tocookie
 from ecjtu.utils.logger import get_path
 
-from . import schema
-
 
 def encode_data(data: str) -> str:
-    # 将数据编码为base64字符串
+    """encode to string
+
+    Args:
+        data (str): string to encode
+
+    Returns:
+        str: encoded string
+    """
     return base64.b64encode(data.encode()).decode()
 
 
 def decode_data(encoded_data: str) -> str:
-    # 解码base64字符串
+    """decode to string
+
+    Args:
+        encoded_data (str): encoded string
+
+    Returns:
+        str: decoded string
+    """
     return base64.b64decode(encoded_data.encode()).decode()
 
 
-# 双token加密
 def create_tokens(stud_id: str, pwd: str) -> tuple[str, str]:
+    """create access_token and refresh_token
+
+    Args:
+        stud_id (str): student id
+        pwd (str): password
+
+    Returns:
+        tuple[str, str]: access_token and refresh_token
+    """
     access_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
         minutes=60
     )
@@ -44,20 +65,30 @@ def create_tokens(stud_id: str, pwd: str) -> tuple[str, str]:
     stud_file = CushyOrmCache(get_path())
     stud = stud_file.query("FileAuth").filter(stud_id=stud_id).first()
 
-    # 创建用户储存信息
+    # if not exist, create a new one
     if not stud:
         stud = schema.FileAuth(stud_id, access_token, cookie_list)
         stud_file.add(stud)
         return access_token, refresh_token
-    # 更新用户信息
+    # update the old one
     stud.cookie = cookie_list
     stud.token = access_token
     stud_file.update_obj(stud)
     return access_token, refresh_token
 
 
-# 刷新access_token
 def refresh_access_token(refresh_token: str) -> str:
+    """refresh access_token
+
+    Args:
+        refresh_token (str): refresh_token
+
+    Returns:
+        str: access_token
+
+    Raises:
+        Exception: if token is invalid or expired
+    """
     data = decode_data(refresh_token)
     print(data)
     stud_id = data.split(":")[0]
@@ -78,8 +109,15 @@ def refresh_access_token(refresh_token: str) -> str:
         return create_tokens(stud_id, pwd)[0]
 
 
-# 验证和读取access_token的stud_id
 def get_stud_id(access_token: str) -> str:
+    """get stud_id from access_token
+
+    Args:
+        access_token (str): access_token
+
+    Returns:
+        str: stud_id
+    """
     try:
         data = decode_data(access_token)
         stud_file = CushyOrmCache(get_path())
@@ -100,8 +138,15 @@ def get_stud_id(access_token: str) -> str:
     return stud_id
 
 
-# 读取cookie
 def get_cookie(stud_id: str) -> httpx.Cookies:
+    """get cookie from stud_id
+
+    Args:
+        stud_id (str): stud_id
+
+    Returns:
+        httpx.Cookies: cookies
+    """
     stud_file = CushyOrmCache(get_path())
     stud = stud_file.query("FileAuth").filter(stud_id=stud_id).first()
     cookies = list_tocookie(stud.cookie)

@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class UserLoginSchema(BaseModel):
-    stud_id: str = Field(..., min_length=1)
-    password: str = Field(..., min_length=1)
+    stud_id: str = Field(..., min_length=1, description="学号")
+    password: str = Field(..., min_length=1, description="密码")
 
 
 class FileAuth(BaseORMModel):

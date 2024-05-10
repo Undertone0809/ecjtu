@@ -1,9 +1,15 @@
 import argparse
 
-from ecjtu_api.api import start_api_server
+from ecjtu.ecjtu_api.api import start_api_server
 
 
 def main():
+    """start the api server from the command line
+
+    Usage:
+        python ecjtu.server.py --port 8000
+
+    """
     parser = argparse.ArgumentParser(description="ECJTU Command Line Interface")
     parser.add_argument(
         "--port", type=int, default=8000, help="Port to run the server on"
