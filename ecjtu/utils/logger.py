@@ -14,6 +14,11 @@ def get_log_path() -> str:
     return f"{log_directory}/{current_time}.log"
 
 
+def get_path() -> str:
+    log_directory = get_default_storage_path("logs")
+    return f"{log_directory}"
+
+
 class LogManager(metaclass=Singleton):
     def __init__(self) -> None:
         self.logger = logging.getLogger("ecjtu")

@@ -63,7 +63,11 @@ class BaseClient(Generic[_HttpxClientT]):
 
 class ECJTU(BaseClient[httpx.Client], httpx.Client):
     def __init__(
-        self, stud_id: Optional[str] = None, password: Optional[str] = None, **kwargs
+        self,
+        stud_id: Optional[str] = None,
+        password: Optional[str] = None,
+        cookie: Optional[CookieTypes] = None,
+        **kwargs,
     ) -> None:
         """Initialize ECJTU client.
 
@@ -73,9 +77,12 @@ class ECJTU(BaseClient[httpx.Client], httpx.Client):
         """
         super().__init__(verify=False, **kwargs)
 
-        self.stud_id: str = stud_id or os.environ.get("ECJTU_STUDENT_ID")
-        self.password: str = password or os.environ.get("ECJTU_PASSWORD")
-        self.enc_password: str = _get_enc_password(self.password)
+        if cookie:
+            self.cookies = cookie
+        else:
+            self.stud_id: str = stud_id or os.environ.get("ECJTU_STUDENT_ID")
+            self.password: str = password or os.environ.get("ECJTU_PASSWORD")
+            self.enc_password: str = _get_enc_password(self.password)
 
         self.scheduled_courses = crud.ScheduledCourseCRUD(self)
         self.scores = crud.ScoreCRUD(self)
@@ -216,10 +223,6 @@ class ECJTU(BaseClient[httpx.Client], httpx.Client):
             )
 
         logger.info("Login successful")
-
-    def start_api_server(self, port: int = 8000):
-        # TODO: Start a FastAPI server
-        pass
 
 
 class AsyncECJTU(BaseClient[httpx.AsyncClient], httpx.AsyncClient):
@@ -377,7 +380,3 @@ class AsyncECJTU(BaseClient[httpx.AsyncClient], httpx.AsyncClient):
             )
 
         logger.info("Login successful")
-
-    async def start_api_server(self):
-        # TODO: Start a FastAPI server
-        pass
