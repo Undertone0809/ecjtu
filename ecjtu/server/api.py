@@ -6,7 +6,7 @@ from fastapi.responses import RedirectResponse
 from starlette.responses import JSONResponse
 
 from ecjtu.client import ECJTU
-from ecjtu.ecjtu_api import auth, middle, respose_result, schema
+from ecjtu.server import auth, middle, respose_result, schema
 
 app = FastAPI(title="ECJTU API", description="API for ECJTU")
 
@@ -24,6 +24,7 @@ def push_docs():
     tags=["登录"],
     summary="登录",
     description="登录获取access_token和refresh_token,access_token用于之后的所有请求,refresh_token用于刷新access_token",
+    # noqa
 )
 def login(user: schema.UserLoginSchema) -> JSONResponse:
     """login

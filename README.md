@@ -40,6 +40,8 @@ ecjtu 是一个 Pythonic 的 ECJTU API SDK，旨在为开发者提供一个简�
 
 ⛔ 不做偏应用层的开发，专注于提供核心的数据服务。
 
+![img.png](assets/images/docs.png)
+
 ## 📗 Usage
 
 打开终端命令行，输入以下命令：
@@ -264,29 +266,36 @@ asyncio.run(main())
 ## 提供 web 服务器，提供 API 服务
 
 ### 启动方法
-1. 通过python代码启动
-    ```py
-    from ecjtu.ecjtu_api.api import start_api_server
 
-    def main():
-        start_api_server(port=8080)
+1. 通过python代码启动
+
+```python
+from ecjtu.server import start_api_server
+
+def main():
+    start_api_server(port=8080)
+
+if __name__ == "__main__":
+    main()
+```
     
-    if __name__ == "__main__":
-        main()
-    ```
 2. 通过命令行启动
-    ```shell
-    python ecjtu/server.py --port 8080
-    ```
+
+```shell
+ecjtu --port 8080
+```
 
 ### 使用方法
+
 1. 启动之后，命令行会显示如下内容
-    ```shell
-    INFO:     Started server process [2545]
-    INFO:     Waiting for application startup.
-    INFO:     Application startup complete.
-    INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
-    ```
+
+```shell
+INFO:     Started server process [2545]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+```
+
 2. 此时通过浏览器访问 http://127.0.0.1:8080 可以看到api在线调试文档
 
 ### 本项目提供的api接口
@@ -343,9 +352,10 @@ poetry install
 下面列举了一些未来可能添加的功能，欢迎贡献代码，提出建议。
 
 - [ ] 提供 vercel 一键部署
+- [ ] 提供 zeabur 一键部署
 - [ ] 提供 docker 快速服务部署
 - [ ] 增加考试查询
-- [ ] 增加实现查询
+- [ ] 增加实验查询
 - [ ] 增加衍生项目: promptulate + ecjtu + bot
 
 ## 📖 Makefile usage
@@ -467,42 +477,6 @@ make docker-remove
 ```
 
 More information [about docker](https://github.com/Undertone0809/python-package-template/tree/main/%7B%7B%20cookiecutter.project_name%20%7D%7D/docker).
-
-</p>
-</details>
-
-<details>
-<summary>Cleanup</summary>
-<p>
-Delete pycache files
-
-```bash
-make pycache-remove
-```
-
-Remove package build
-
-```bash
-make build-remove
-```
-
-Delete .DS_STORE files
-
-```bash
-make dsstore-remove
-```
-
-Remove .mypycache
-
-```bash
-make mypycache-remove
-```
-
-Or to remove all above run:
-
-```bash
-make cleanup
-```
 
 </p>
 </details>
