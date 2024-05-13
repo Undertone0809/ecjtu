@@ -83,7 +83,7 @@ pywin32==306 ; sys_platform == "win32" and platform_python_implementation != "Py
 pywinpty==2.0.13 ; os_name == "nt" and python_version >= "3.9"
 pyyaml==6.0.1 ; python_version >= "3.9"
 pyzmq==26.0.0 ; python_version >= "3.9"
-referencing==0.34.0 ; python_version >= "3.9"
+referencing==0.35.1 ; python_version >= "3.9"
 requests==2.31.0 ; python_version >= "3.9"
 rfc3339-validator==0.1.4 ; python_version >= "3.9"
 rfc3986-validator==0.1.1 ; python_version >= "3.9"
