@@ -5,7 +5,7 @@ import httpx
 from cushy_storage import CushyOrmCache
 
 from ecjtu.client import ECJTU
-from ecjtu.ecjtu_api import schema
+from ecjtu.server import schema
 from ecjtu.utils.cookie import cookies_tolist, list_tocookie
 from ecjtu.utils.logger import get_path
 

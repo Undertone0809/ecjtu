@@ -1,6 +1,6 @@
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from ecjtu.ecjtu_api import auth, respose_result
+from ecjtu.server import auth, respose_result
 
 
 class MyMiddleware(BaseHTTPMiddleware):
