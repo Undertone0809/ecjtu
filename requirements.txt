@@ -1,4 +1,4 @@
-annotated-types==0.6.0 ; python_version >= "3.9"
+annotated-types==0.7.0 ; python_version >= "3.9"
 anyio==4.3.0 ; python_version >= "3.9"
 appnope==0.1.4 ; platform_system == "Darwin" and python_version >= "3.9"
 argon2-cffi-bindings==21.2.0 ; python_version >= "3.9"
