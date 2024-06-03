@@ -35,7 +35,7 @@ pyopenssl = "24.1.0"
 beautifulsoup4 = "4.12.3"
 pydantic = ">=2.0.0"
 fastapi = "^0.111.0"
-uvicorn = "^0.29.0"
+uvicorn = ">=0.29,<0.31"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.4.3"
