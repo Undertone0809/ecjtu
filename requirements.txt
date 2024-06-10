@@ -73,7 +73,7 @@ ptyprocess==0.7.0 ; (os_name != "nt" or sys_platform != "win32") and python_vers
 pure-eval==0.2.2 ; python_version >= "3.9"
 pycparser==2.22 ; python_version >= "3.9"
 pydantic-core==2.18.1 ; python_version >= "3.9"
-pydantic==2.7.0 ; python_version >= "3.9"
+pydantic==2.7.3 ; python_version >= "3.9"
 pygments==2.17.2 ; python_version >= "3.9"
 pyopenssl==24.1.0 ; python_version >= "3.9"
 python-dateutil==2.9.0.post0 ; python_version >= "3.9"
