@@ -32,7 +32,7 @@ classifiers = [
 python = ">=3.8"
 urllib3 = "1.26.18"
 pyopenssl = "24.1.0"
-beautifulsoup4 = "4.12.3"
+beautifulsoup4 = "4.14.3"
 pydantic = ">=2.0.0"
 fastapi = "^0.111.0"
 uvicorn = "^0.29.0"
