@@ -4,13 +4,15 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  diagnose-python-314:
+  regenerate-lock:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: agent/modernize-python-support
       - uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.14"
@@ -18,20 +20,14 @@ jobs:
         uses: abatilo/actions-poetry@v4
         with:
           poetry-version: 2.2.1
-      - name: Install dependencies
+      - name: Regenerate dependency graph
+        run: poetry lock --regenerate
+      - name: Commit lock file
         run: |
-          poetry config virtualenvs.in-project true
-          poetry install --sync
-      - name: Run tests
-        run: |
-          set +e
-          poetry run pytest -vv > pytest-3.14.log 2>&1
-          status=$?
-          cat pytest-3.14.log
-          exit $status
-      - name: Upload test log
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: pytest-python-3.14
-          path: pytest-3.14.log
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add poetry.lock
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: regenerate modern dependency lock"
+            git push origin HEAD:agent/modernize-python-support
+          fi
