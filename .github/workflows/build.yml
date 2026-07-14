@@ -2,11 +2,16 @@ name: build
 
 on: [push, pull_request]
 
+permissions:
+  contents: write
+
 jobs:
   lock:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.14"
@@ -16,8 +21,12 @@ jobs:
           poetry-version: 2.2.1
       - name: Resolve dependencies
         run: poetry lock
-      - name: Upload lock file
-        uses: actions/upload-artifact@v7
-        with:
-          name: modern-poetry-lock
-          path: poetry.lock
+      - name: Commit lock file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add poetry.lock
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: refresh modern dependency lock"
+            git push
+          fi
