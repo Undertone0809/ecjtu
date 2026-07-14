@@ -27,8 +27,19 @@ jobs:
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       run: |
+        set +e
         poetry config virtualenvs.in-project true
-        poetry install
+        poetry install > poetry-install.log 2>&1
+        status=$?
+        cat poetry-install.log
+        exit $status
+
+    - name: Upload dependency install log
+      if: failure()
+      uses: actions/upload-artifact@v7
+      with:
+        name: poetry-install-${{ matrix.python-version }}
+        path: poetry-install.log
 
     - name: Run style checks
       run: |
