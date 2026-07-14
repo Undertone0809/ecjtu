@@ -2,15 +2,14 @@ import asyncio
 
 from ecjtu import ECJTU, ScheduledCourse
 from ecjtu.crud import (
+    GPACRUD,
     AsyncScheduledCourseCRUD,
     ElectiveCourseCRUD,
-    GPACRUD,
     ScheduledCourseCRUD,
     ScoreCRUD,
 )
 from ecjtu.server.api import app
 from ecjtu.server.auth import decode_data, encode_data
-
 
 COURSE_PAYLOAD = {
     "classSpan": "1,2",
