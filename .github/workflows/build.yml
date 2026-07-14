@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: agent/modernize-python-support
       - uses: actions/setup-python@v6.3.0
         with:
           python-version: "3.14"
@@ -29,8 +29,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ecjtu tests pyproject.toml
+          git add -A
+          git status --short
           if ! git diff --cached --quiet; then
             git commit -m "style: apply modern Ruff formatting"
-            git push
+            git push origin HEAD:agent/modernize-python-support
           fi
