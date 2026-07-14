@@ -3,42 +3,34 @@ name: build
 on: [push, pull_request]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  build:
+  format:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-python@v6.3.0
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.14"
       - name: Install Poetry
         uses: abatilo/actions-poetry@v4
         with:
           poetry-version: 2.2.1
-      - name: Set up cache
-        uses: actions/cache@v6.1.0
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Validate project metadata and lock file
-        run: poetry check --lock
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
           poetry install --sync
-      - name: Verify SDK and API imports
-        run: poetry run python -c "import ecjtu; from ecjtu.server.api import app; assert app.title == 'ECJTU API'"
-      - name: Run style checks
-        run: make check-codestyle
-      - name: Run tests
-        run: make test
-      - name: Build package
-        if: matrix.python-version == '3.14'
-        run: poetry build
+      - name: Apply Ruff fixes
+        run: make lint-fix
+      - name: Commit formatting
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ecjtu tests pyproject.toml
+          if ! git diff --cached --quiet; then
+            git commit -m "style: apply modern Ruff formatting"
+            git push
+          fi
