@@ -16,16 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.9]
-        poetry-version: [1.7.1]
+        poetry-version: [2.2.1]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
-        uses: abatilo/actions-poetry@v3
+        uses: abatilo/actions-poetry@v4
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Publish
