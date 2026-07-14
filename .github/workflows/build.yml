@@ -2,32 +2,54 @@ name: build
 
 on:
   pull_request:
+  push:
+    branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  regenerate-lock:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+
     steps:
       - uses: actions/checkout@v7
-        with:
-          ref: agent/modernize-python-support
       - uses: actions/setup-python@v6.3.0
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
       - name: Install Poetry
         uses: abatilo/actions-poetry@v4
         with:
           poetry-version: 2.2.1
-      - name: Regenerate dependency graph
-        run: poetry lock --regenerate
-      - name: Commit lock file
+      - name: Set up cache
+        uses: actions/cache@v6.1.0
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Validate project metadata and lock file
+        run: poetry check --lock
+      - name: Install dependencies
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add poetry.lock
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: regenerate modern dependency lock"
-            git push origin HEAD:agent/modernize-python-support
-          fi
+          poetry config virtualenvs.in-project true
+          poetry install --sync
+      - name: Verify SDK and API imports
+        run: poetry run python -c "import ecjtu; from ecjtu.server.api import app; assert app.title == 'ECJTU API'"
+      - name: Run style checks
+        run: make check-codestyle
+      - name: Run tests
+        run: make test
+      - name: Build package
+        if: matrix.python-version == '3.14'
+        run: poetry build
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build Docker image
+        run: docker build -f docker/Dockerfile -t ecjtu:ci .
