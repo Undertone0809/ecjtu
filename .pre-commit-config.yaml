@@ -1,15 +1,16 @@
 default_language_version:
-  python: python3.8
+  python: python3.10
 
-default_stages: [commit, push]
+default_stages: [pre-commit, pre-push]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.5.0
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: end-of-file-fixer
         exclude: LICENSE
+      - id: trailing-whitespace
 
   - repo: local
     hooks:
@@ -18,11 +19,12 @@ repos:
         entry: make check-codestyle
         types: [python]
         language: system
+        pass_filenames: false
 
-  - repo: local
-    hooks:
       - id: test
         name: test
         entry: make test
         types: [python]
         language: system
+        pass_filenames: false
+        stages: [pre-push]
