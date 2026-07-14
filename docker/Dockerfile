@@ -1,25 +1,22 @@
-FROM python:3.8-slim-buster
+FROM python:3.14-slim
 
 ENV LANG=C.UTF-8 \
-  LC_ALL=C.UTF-8 \
-  PATH="${PATH}:/root/.poetry/bin"
+    LC_ALL=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    POETRY_VERSION=2.2.1
 
-RUN apt-get update && \
-  apt-get install -y --no-install-recommends \
-  curl \
-  && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-COPY pyproject.toml ./
-
-# Install Poetry
-RUN pip install poetry \
-    cd /usr/local/bin && \
-    ln -s /opt/poetry/bin/poetry && \
+RUN pip install "poetry==${POETRY_VERSION}" && \
     poetry config virtualenvs.create false
 
-# Allow installing dev dependencies to run tests
-ARG INSTALL_DEV=false
-RUN bash -c "if [ $INSTALL_DEV == 'true' ] ; then poetry install --no-root ; else poetry install --no-root --no-dev ; fi"
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --only main --no-root --no-interaction --no-ansi
 
-CMD mkdir -p /workspace
-WORKDIR /workspace
+COPY ecjtu ./ecjtu
+
+EXPOSE 8080
+
+CMD ["python", "-m", "ecjtu", "--port", "8080"]
