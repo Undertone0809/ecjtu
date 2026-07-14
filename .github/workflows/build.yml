@@ -6,6 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.8", "3.9"]
 
@@ -27,19 +28,11 @@ jobs:
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       run: |
-        set +e
         poetry config virtualenvs.in-project true
-        poetry install > poetry-install.log 2>&1
-        status=$?
-        cat poetry-install.log
-        exit $status
-
-    - name: Upload dependency install log
-      if: failure()
-      uses: actions/upload-artifact@v7
-      with:
-        name: poetry-install-${{ matrix.python-version }}
-        path: poetry-install.log
+        if [ ! -x .venv/bin/python ]; then
+          python -m venv .venv
+        fi
+        poetry install
 
     - name: Run style checks
       run: |
