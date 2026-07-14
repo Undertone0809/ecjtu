@@ -10,17 +10,18 @@ jobs:
         python-version: ["3.8", "3.9"]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
+    - name: Install Poetry
+      uses: abatilo/actions-poetry@v4
+      with:
+        poetry-version: 2.2.1
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4.7.1
+      uses: actions/setup-python@v6.3.0
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install poetry
-      run: pip install poetry
-
     - name: Set up cache
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v6.1.0
       with:
         path: .venv
         key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
