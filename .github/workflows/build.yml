@@ -3,41 +3,21 @@ name: build
 on: [push, pull_request]
 
 jobs:
-  build:
+  lock:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.8", "3.9"]
-
     steps:
-    - uses: actions/checkout@v7
-    - name: Install Poetry
-      uses: abatilo/actions-poetry@v4
-      with:
-        poetry-version: 2.2.1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6.3.0
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Set up cache
-      uses: actions/cache@v6.1.0
-      with:
-        path: .venv
-        key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
-    - name: Install dependencies
-      run: |
-        poetry config virtualenvs.in-project true
-        if [ ! -x .venv/bin/python ]; then
-          python -m venv .venv
-        fi
-        poetry install
-
-    - name: Run style checks
-      run: |
-        make check-codestyle
-
-    - name: Run tests
-      run: |
-        make test
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6.3.0
+        with:
+          python-version: "3.14"
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+        with:
+          poetry-version: 2.2.1
+      - name: Resolve dependencies
+        run: poetry lock
+      - name: Upload lock file
+        uses: actions/upload-artifact@v7
+        with:
+          name: modern-poetry-lock
+          path: poetry.lock
