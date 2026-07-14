@@ -1,6 +1,12 @@
 name: build
 
-on: [push, pull_request]
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -8,36 +14,42 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-    - uses: actions/checkout@v7
-    - name: Install Poetry
-      uses: abatilo/actions-poetry@v4
-      with:
-        poetry-version: 2.2.1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6.3.0
-      with:
-        python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+        with:
+          poetry-version: 2.2.1
+      - name: Set up cache
+        uses: actions/cache@v6.1.0
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - name: Validate project metadata and lock file
+        run: poetry check --lock
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --sync
+      - name: Verify SDK and API imports
+        run: poetry run python -c "import ecjtu; from ecjtu.server.api import app; assert app.title == 'ECJTU API'"
+      - name: Run style checks
+        run: make check-codestyle
+      - name: Run tests
+        run: make test
+      - name: Build package
+        if: matrix.python-version == '3.14'
+        run: poetry build
 
-    - name: Set up cache
-      uses: actions/cache@v6.1.0
-      with:
-        path: .venv
-        key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
-    - name: Install dependencies
-      run: |
-        poetry config virtualenvs.in-project true
-        if [ ! -x .venv/bin/python ]; then
-          python -m venv .venv
-        fi
-        poetry install
-
-    - name: Run style checks
-      run: |
-        make check-codestyle
-
-    - name: Run tests
-      run: |
-        make test
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build Docker image
+        run: docker build -f docker/Dockerfile -t ecjtu:ci .

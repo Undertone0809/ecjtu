@@ -1,6 +1,3 @@
-# https://testdriven.io/tips/810f9bb5-c9df-479d-baa4-290c7e0779f1/
-# https://github.com/abatilo/actions-poetry
-
 name: Release Python Package
 
 on:
@@ -12,25 +9,21 @@ permissions:
 
 jobs:
   publish:
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.9]
-        poetry-version: [2.2.1]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v6.3.0
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install poetry
+          python-version: "3.14"
+      - name: Install Poetry
         uses: abatilo/actions-poetry@v4
         with:
-          poetry-version: ${{ matrix.poetry-version }}
+          poetry-version: 2.2.1
+      - name: Validate package
+        run: poetry check --lock
       - name: Publish
         env:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          poetry config pypi-token.pypi $PYPI_API_TOKEN
-          poetry publish --build
+          poetry config pypi-token.pypi "$PYPI_API_TOKEN"
+          poetry publish --build --no-interaction
